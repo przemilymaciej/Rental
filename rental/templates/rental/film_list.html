@@ -1,0 +1,13 @@
+{% extends 'rental/base.html' %}
+
+{% block content %}
+{% for film in films %}
+<div>
+    <h2>Tytuł: {{film.title}}</h2>
+    <p>Reżyser: {{film.director}}</p>
+    <p>Gatunek: {{film.genre}}</p>
+    <p>Czas trwania: {{film.length}}</p>
+    <p>ID: {{film.pk}}</p>
+</div>
+{% endfor %}
+{% endblock %}

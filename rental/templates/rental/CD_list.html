@@ -1,0 +1,14 @@
+{% extends 'rental/base.html' %}
+
+{% block content %}
+{% for CD in CDs %}
+<div>
+    <h2>Tytuł: {{CD.title}}</h2>
+    <p>Zespół: {{CD.band}}</p>
+    <p>Gatunek: {{CD.genre}}</p>
+    <p>Czas trwania: {{CD.length}}</p>
+    <p>Utwory: {{CD.tracks}}</p>
+    <p>ID: {{CD.pk}}</p>
+</div>
+{% endfor %}
+{% endblock %}
