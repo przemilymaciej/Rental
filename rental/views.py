@@ -15,3 +15,6 @@ def film_list(request):
 def CD_list(request):
     CDs = CD.objects.filter(borrowed=False)
     return render(request, 'rental/CD_list.html', {'CDs':CDs})
+
+def main_page(request):
+    return render(request, 'rental/main_page.html', {})

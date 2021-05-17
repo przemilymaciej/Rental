@@ -8,6 +8,10 @@
     <p>Gatunek: {{book.genre}}</p>
     <p>ISBN: {{book.ISBN}}</p>
     <p>ID: {{book.pk}}</p>
+    {% if user.is_authenticated %}
+        <a href="#">Edytuj</a> &bull;
+        <a href="#">Usuń</a>
+    {% endif %}
 </div>
 {% endfor %}
 {% endblock %}
