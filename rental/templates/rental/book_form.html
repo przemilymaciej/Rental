@@ -1,11 +1,9 @@
 {% extends 'rental/base.html' %}
 
 {% block content %}
-{% for book in object_list %}
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit"value="Zapisz">
     </form>
-{% endfor %}
 {% endblock %}

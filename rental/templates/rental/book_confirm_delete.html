@@ -1,0 +1,14 @@
+{% extends 'rental/base.html' %}
+
+{% block content %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="alert alert-warning" role="alert">
+        Czy jesteś pewny usunięcia {{ object }} ?
+      </div>
+      <input type="submit" value="Tak, usuń tę książkę" />
+      <a class="btn btn-success" href="{% url 'books:book_list' %}">Nie</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

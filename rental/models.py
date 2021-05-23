@@ -1,23 +1,27 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
+class BookGenre(models.Model):
+    name = models.CharField(
+        max_length=200,
+        help_text="Enter a book genre"
+    )
+    def __str__(self):
+        return self.name
+
+
 
 class Book(models.Model):
-    whoAdd = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=50)
-    genre = models.CharField(max_length=30)
-    ISBN = models.CharField(max_length=20, unique=True)
-    created_date = models.DateTimeField(
-        default=timezone.now)
-    published_date = models.DateTimeField(
-        blank=True, null=True)
-    borrowed = models.BooleanField(
-        default=False)
+    genre = models.ForeignKey('BookGenre', on_delete=models.PROTECT, null=True)
+    ISBN = models.CharField(max_length=13, unique=True)
 
 
     class Meta:
         unique_together = ('author','title','genre',)
-
 
     def publish(self):
         self.published_date = timezone.now()
@@ -26,14 +30,20 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
-
+class FilmGenre(models.Model):
+    name = models.CharField(
+        max_length=200,
+        help_text="Enter a book genre"
+    )
+    def __str__(self):
+        return self.name
 
 class Film(models.Model):
-    whoAdd = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     director = models.CharField(max_length=200)
     title = models.CharField(max_length=50)
-    genre = models.CharField(max_length=30)
-    length = models.DecimalField(max_digits=19, decimal_places=2)
+    genre = models.ForeignKey('FilmGenre', on_delete=models.PROTECT, null=True)
+    length = models.DecimalField(max_digits=3, decimal_places=2)
     borrowed = models.BooleanField(
         default=False)
 
@@ -45,13 +55,14 @@ class Film(models.Model):
     class Meta:
         unique_together = ('director','title','length',)
 
+
 class CD(models.Model):
     whoAdd = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     band = models.CharField(max_length=200)
     title = models.CharField(max_length=50)
     genre = models.CharField(max_length=30)
     tracks = models.TextField()
-    length = models.DecimalField(max_digits=19, decimal_places=2)
+    length = models.DecimalField(max_digits=3, decimal_places=2)
     borrowed = models.BooleanField(
         default=False)
     class Meta:

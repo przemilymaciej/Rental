@@ -9,10 +9,11 @@
         <li><a href="{% url 'registration_register' %}">Utwórz konto</a></li>
       {% else %}
         <li><a href="{% url 'auth_logout' %}">Wyloguj się</a></li>
+        <li><a href="{% url 'books:my_borrowed_books' %}">Twoje ksiazki</a></li>
+        <li><a href="{% url 'books:available_books' %}">Dostepne ksiazki</a></li>
       {% endif %}
     </ul>
-    <h3><a href="{% url 'book_list' %}">Availible books list</a></h3>
-    <h3><a href="{% url 'film_list' %}">Availible films list</a></h3>
-    <h3><a href="{% url 'CD_list' %}">Availible CDs list</a></h3>
+
+
 </div>
 {% endblock %}
