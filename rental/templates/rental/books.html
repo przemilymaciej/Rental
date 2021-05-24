@@ -1,0 +1,39 @@
+{% extends "rental/base.html" %}
+{% block content %}
+<hr class="my-4">
+<a href="{% url "books:book_new" %}">+ Nowa książka</a>
+<h3>Most popular books:</h3>
+<div class="row lastBooksContainer">
+    {% for book in top_3_books %}
+    <div class="col-md-4 bookCard">
+        <div class="cardBorder">
+            <h5>{{ book.title }}</h5>
+            <h6>{{ book.author }}</h6>
+            <a href="{% url 'books:bookDetail' slug=book.slug %}"><button class="btn btn-primary btn-xs">Book details</button></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<h3>Recent added books:</h3>
+<div class="row lastBooksContainer">
+    {% for book in book_list %}
+    <div class="col-md-4 bookCard">
+        <div class="cardBorder">
+            <h5>{{ book.title }}</h5>
+            <h6>{{ book.author }}</h6>
+            <a href="{% url 'books:bookDetail' slug=book.slug %}"><button class="btn btn-primary btn-xs">Book details</button></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<p>
+    <h5 class="mt-3">Search most popular books by the genre: </h5>
+    <form class="searchForm" action="{% url 'books:search' %}" method="GET">
+        <div class="form-group row">
+            <input class="form-control col-md-7" required="required" name="q" type="text" placeholder="Write the genre">
+            <span class="col-md-1"></span>
+            <button type="submit" class="btn btn-primary form-control col-md-2">Search</button>
+        </div>
+    </form>
+</p>
+{% endblock content %}

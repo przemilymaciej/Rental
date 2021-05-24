@@ -1,0 +1,40 @@
+
+{% extends "rental/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4 bookDetailLeftSide">
+        {% if book.book_amount > 0 %}
+        <h5><strong>Available Book amount :</strong> {{ book.book_amount }}</h5>
+            {% if user.is_authenticated %}
+            <a href="{% url 'books:confirm_rent_view' slug=book.slug %}"><button class="btn btn-primary btn-xs">Rent</button></a>
+            <a href="{% url 'books:book_edit' book.id %}"><button type="button" >Zmień</button></a>
+            <a href="{% url 'books:book_delete' book.id %}"><button type="button">Usuń</button></a>
+            {% else %}
+            <a href="{% url 'books:confirm_rent_view' slug=book.slug %}"><button class="btn btn-primary btn-xs">Login to rent
+                    book</button></a>
+            {% endif %}
+        {% else %}
+        <h5><strong>Available Book amount : </strong>none</h5>
+        {% endif %} <br>
+    </div>
+    <div class="col-md-8">
+        <h5><strong>{{ book.title }}</strong> </h5>
+        <h5><strong>Author:</strong> {{ book.author }}</h5>
+        <h5><strong>Genre:</strong> {{ book.genre }}</h5>
+        <h5><strong>Popularity:</strong> {{ book.popularity }}</h5>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock content %}
