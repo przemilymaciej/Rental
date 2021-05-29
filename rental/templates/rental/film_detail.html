@@ -1,0 +1,40 @@
+
+{% extends "rental/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4 bookDetailLeftSide">
+        {% if film.film_amount > 0 %}
+        <h5><strong>Available Film amount :</strong> {{ film.film_amount }}</h5>
+            {% if user.is_authenticated %}
+            <a href="{% url 'books:f_confirm_rent_view' slug=film.slug %}"><button class="btn btn-primary btn-xs">Rent</button></a>
+            <a href="{% url 'books:film_edit' film.id %}"><button type="button" >Zmień</button></a>
+            <a href="{% url 'books:film_delete' film.id %}"><button type="button">Usuń</button></a>
+            {% else %}
+            <a href="{% url 'books:f_confirm_rent_view' slug=film.slug %}"><button class="btn btn-primary btn-xs">Login to rent
+                    film</button></a>
+            {% endif %}
+        {% else %}
+        <h5><strong>Available film amount : </strong>none</h5>
+        {% endif %} <br>
+    </div>
+    <div class="col-md-8">
+        <h5><strong>{{ film.title }}</strong> </h5>
+        <h5><strong>Author:</strong> {{ film.director }}</h5>
+        <h5><strong>Genre:</strong> {{ film.genre }}</h5>
+        <h5><strong>Popularity:</strong> {{ film.popularity }}</h5>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock content %}

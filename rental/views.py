@@ -1,10 +1,13 @@
 from .models import Book
 from .models import Film
-from .models import CD
 from .models import BookRentHistory
+from .models import FilmRentHistory
+from .models import CD
+from .models import CDRentHistory
+from django.contrib.auth.models import User
 from django.views import generic
 from django.urls import reverse_lazy
-from .forms import BookForm
+from .forms import BookForm, FilmForm, CDForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, reverse
 from django.http import Http404, HttpResponseForbidden
@@ -17,6 +20,19 @@ from datetime import datetime
 
 class HomePageView(generic.TemplateView):
     template_name='rental/main_page.html'
+
+
+class RankingView(generic.TemplateView):
+    template_name='rental/stats.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RankingView, self).get_context_data(**kwargs)
+        context.update({
+            'top_5_CD': User.objects.annotate(num_CDs=Count('CDs')).order_by('-num_CDs')[:5],
+            'top_5_films': User.objects.annotate(num_films=Count('films')).order_by('-num_films')[:5],
+            'top_5_books': User.objects.annotate(num_books=Count('CDs')).order_by('-num_books')[:5],
+        })
+        return context
 
 
 class BookListView(generic.ListView):
@@ -54,7 +70,7 @@ class SearchBookListView(generic.ListView):
         return queryset
 
 @login_required(login_url='users/login')
-def confirm_rent_view(request, slug):
+def confirm_rent_viewb(request, slug):
     try:
         b = Book.objects.get(slug=slug)
         if b.book_amount <= 0:
@@ -125,3 +141,214 @@ class BookDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy('books:books')
 
 
+class FilmListView(generic.ListView):
+    template_name = 'rental/films.html'
+    model = Film
+
+    def get_context_data(self, **kwargs):
+        context = super(FilmListView, self).get_context_data(**kwargs)
+        context.update({
+            'top_3_films': Film.objects.order_by('-popularity')[:3],
+        })
+        return context
+
+    def get_queryset(self):
+        return Film.objects.order_by('-id')[:3]
+
+
+class FilmDetailView(generic.DetailView):
+    model = Film
+    template_name = 'rental/film_detail.html'
+    def get_success_url(self):
+        return reverse('books:filmDetail', kwargs={'slug': self.object.slug})
+
+
+
+@login_required(login_url='users/login')
+def f_confirm_rent_view(request, slug):
+    try:
+        f = Film.objects.get(slug=slug)
+        if f.film_amount <= 0:
+            messages.warning(
+                request, f'You cant rent this film')
+            return redirect('books:filmDetail', slug=f.slug)
+    except Film.DoesNotExist:
+        raise Http404("We dont have this film")
+    return render(request, 'rental/f_confirm_rent_view.html', {'film': f})
+
+
+@login_required(login_url='users/login')
+def rent_film_view(request, slug):
+    try:
+        f = Film.objects.get(slug=slug)
+        if f:
+            if f.film_amount > 0:
+                f.film_amount -= 1
+                f.popularity += 1
+                f.genre.popularity += 1
+                f.save()
+                log_history = FilmRentHistory(user=request.user, film=f)
+                log_history.save()
+                messages.success(
+                    request, f'You rent a film: {f.title}')
+            else:
+                messages.warning(
+                    request, f'You cant rent this film')
+                return redirect('books:filmDetail', slug=f.slug)
+    except Film.DoesNotExist:
+        raise Http404("Film is unavailable")
+    return redirect('books:films')
+
+
+@login_required(login_url='users/login')
+def return_film_view(request, slug):
+    try:
+        f = Film.objects.filter(slug=slug)[0]
+        if f:
+            f.film_amount += 1
+            f.save()
+            log_history = FilmRentHistory.objects.filter(film=f)[0]
+            log_history.back_date = datetime.now()
+            log_history.save()
+            messages.success(
+                request, f'You successfully returned a film: {f.title}')
+        else:
+            messages.warning(
+                request, f'Error occurs, sorry')
+            return redirect('UserProfile')
+    except Film.DoesNotExist:
+        raise Http404("Film is unavailable now ")
+    return redirect('books:films')
+
+class FilmUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Film
+    form_class = FilmForm
+    success_url = reverse_lazy('books:films')
+
+class FilmCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Film
+    form_class = FilmForm
+    success_url = reverse_lazy('books:films')
+
+class FilmDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Film
+    success_url = reverse_lazy('books:films')
+
+class SearchFilmListView(generic.ListView):
+    template_name = "rental/film_search_result.html"
+    model = Film
+
+    def get_queryset(self):
+        queryset = super(SearchFilmListView, self).get_queryset()
+        q = self.request.GET.get("q")
+        if q:
+            film_by_genre = queryset.filter(genre__name__icontains=q).order_by('-popularity')
+            return film_by_genre
+        return queryset
+
+
+class CDListView(generic.ListView):
+    template_name = 'rental/CDs.html'
+    model = CD
+
+    def get_context_data(self, **kwargs):
+        context = super(CDListView, self).get_context_data(**kwargs)
+        context.update({
+            'top_3_CDs': CD.objects.order_by('-popularity')[:3],
+        })
+        return context
+
+    def get_queryset(self):
+        return CD.objects.order_by('-id')[:3]
+
+
+class CDDetailView(generic.DetailView):
+    model = CD
+    template_name = 'rental/cd_detail.html'
+    def get_success_url(self):
+        return reverse('books:cdDetail', kwargs={'slug': self.object.slug})
+
+
+@login_required(login_url='users/login')
+def cd_confirm_rent_view(request, slug):
+    try:
+        cd = CD.objects.get(slug=slug)
+        if cd.CD_amount <= 0:
+            messages.warning(
+                request, f'You cant rent this CD')
+            return redirect('books:cdDetail', slug=cd.slug)
+    except Film.DoesNotExist:
+        raise Http404("We dont have this CD")
+    return render(request, 'rental/cd_confirm_rent_view.html', {'cd': cd})
+
+
+@login_required(login_url='users/login')
+def rent_cd_view(request, slug):
+    try:
+        cd = CD.objects.get(slug=slug)
+        if cd:
+            if cd.CD_amount > 0:
+                cd.CD_amount -= 1
+                cd.popularity += 1
+                cd.genre.popularity += 1
+                cd.save()
+                log_history = CDRentHistory(user=request.user, cd=cd)
+                log_history.save()
+                messages.success(
+                    request, f'You rent a CD: {cd.title}')
+            else:
+                messages.warning(
+                    request, f'You cant rent this CD')
+                return redirect('books:cdDetail', slug=cd.slug)
+    except Film.DoesNotExist:
+        raise Http404("CD is unavailable")
+    return redirect('books:CDs')
+
+
+@login_required(login_url='users/login')
+def return_cd_view(request, slug):
+    try:
+        cd = CD.objects.filter(slug=slug)[0]
+        if cd:
+            cd.CD_amount += 1
+            cd.save()
+            log_history = CDRentHistory.objects.filter(cd=cd)[0]
+            log_history.back_date = datetime.now()
+            log_history.save()
+            messages.success(
+                request, f'You successfully returned a CD: {cd.title}')
+        else:
+            messages.warning(
+                request, f'Error occurs, sorry')
+            return redirect('UserProfile')
+    except Film.DoesNotExist:
+        raise Http404("Film is unavailable now ")
+    return redirect('books:CDs')
+
+
+class CDUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = CD
+    form_class = CDForm
+    success_url = reverse_lazy('books:CDs')
+
+class CDCreateView(LoginRequiredMixin, generic.CreateView):
+    model = CD
+    form_class = CDForm
+    success_url = reverse_lazy('books:CDs')
+
+class CDDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = CD
+    success_url = reverse_lazy('books:CDs')
+
+
+class SearchCDListView(generic.ListView):
+    template_name = "rental/cd_search_result.html"
+    model = CD
+
+    def get_queryset(self):
+        queryset = super(SearchCDListView, self).get_queryset()
+        q = self.request.GET.get("q")
+        if q:
+            cd_by_genre = queryset.filter(genre__name__icontains=q).order_by('-popularity')
+            return cd_by_genre
+        return queryset

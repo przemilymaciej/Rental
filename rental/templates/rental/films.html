@@ -1,0 +1,41 @@
+{% extends "rental/base.html" %}
+{% block content %}
+<p>
+    <h1 class="text-center"> Films </h1>
+<h5 class="mt-3"><strong>Search most popular films by the genre:</strong> </h5>
+    <form class="searchForm" action="{% url 'books:searchf' %}" method="GET">
+        <div class="form-group row">
+            <input class="form-control col-md-7" required="required" name="q" type="text" placeholder="Write the genre">
+            <span class="col-md-1"></span>
+            <button type="submit" class="btn btn-primary form-control col-md-2">Search</button>
+        </div>
+    </form>
+</p>
+<hr class="my-4">
+<a href="{% url "books:film_new" %}">+ New film</a>
+<h3>Most popular films:</h3>
+<div class="row lastBooksContainer">
+    {% for film in top_3_films %}
+    <div class="col-md-4 bookCard">
+        <div class="cardBorder">
+            <h5>{{ film.title }}</h5>
+            <h6>{{ film.director }}</h6>
+            <a href="{% url 'books:filmDetail' slug=film.slug %}"><button class="btn btn-primary btn-xs">Film details</button></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<h3>Recent added films:</h3>
+<div class="row lastBooksContainer">
+    {% for film in film_list %}
+    <div class="col-md-4 bookCard">
+        <div class="cardBorder">
+            <h5>{{ film.title }}</h5>
+            <h6>{{ film.director }}</h6>
+            <a href="{% url 'books:filmDetail' slug=film.slug %}"><button class="btn btn-primary btn-xs">Film details</button></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

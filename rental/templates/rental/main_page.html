@@ -1,18 +1,15 @@
 {% extends 'rental/base.html' %}
 
 {% block content %}
-<div>
-    <h2>It's a main page!</h2>
-    <ul>
-        <li><a href="{% url 'books:books' %}">Ksiazki</a></li>
-      {% if not user.is_authenticated %}
-        <li><a href="{% url 'auth_login' %}">Zaloguj się</a></li>
-        <li><a href="{% url 'registration_register' %}">Utwórz konto</a></li>
-      {% else %}
-        <li><a href="{% url 'auth_logout' %}">Wyloguj się</a></li>
-        <div class="col-md-9">
+<p>
+<h1 class="text-center"> It's a main page! </h1>
+</p>
+<div class="row mx-auto " >
+
+    <div class="col-12 col-md-8 ">
+        {% if user.is_authenticated %}
         <h2>Your rented books:</h2>
-        <table style="width:100%" id="books">
+        <table class='table table-bordered' style="width:100%" >
             <tr>
                 <th>Title</th>
                 <th>Rent date</th>
@@ -26,8 +23,56 @@
                     <td>{{ book.rent_date|date:"d-m-Y" }}</td>
                     <td>{{ book.back_date|date:"d-m-Y" }}</td>
                     <td>{{ book.how_many_days }}</td>
-                    {% if book.how_many_days >= '0:' %}
+                    {% if book.how_many_days > '0:' %}
                         <td><a href="{% url 'books:return_book' slug=book.book.slug %}">Return it</a>
+                        </td>
+                    {% else %}
+                        <td>Returned</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+            <h2>Your rented films:</h2>
+        <table class="table table-bordered" style="width:100%" id="films">
+            <tr>
+                <th>Title</th>
+                <th>Rent date</th>
+                <th>Data of return</th>
+                <th>Days</th>
+                <th>Action</th>
+            </tr>
+            {% for film in user.films.all %}
+                <tr>
+                    <td>{{ film.film.title }}</td>
+                    <td>{{ film.rent_date|date:"d-m-Y" }}</td>
+                    <td>{{ film.back_date|date:"d-m-Y" }}</td>
+                    <td>{{ film.how_many_days }}</td>
+                    {% if film.how_many_days > '0:' %}
+                        <td><a href="{% url 'books:return_film' slug=film.film.slug %}">Return it</a>
+                        </td>
+                    {% else %}
+                        <td>Returned</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+            <h2>Your rented CDs:</h2>
+        <table class="table table-bordered" style="width:100%" id="CDs">
+            <tr>
+                <th>Title</th>
+                <th>Rent date</th>
+                <th>Data of return</th>
+                <th>Days</th>
+                <th>Action</th>
+            </tr>
+            {% for cd in user.CDs.all %}
+                <tr>
+                    <td>{{ cd.cd.title }}</td>
+                    <td>{{ cd.rent_date|date:"d-m-Y" }}</td>
+                    <td>{{ cd.back_date|date:"d-m-Y" }}</td>
+                    <td>{{ cd.how_many_days }}</td>
+                    {% if cd.how_many_days > '0:' %}
+                        <td><a href="{% url 'books:return_cd' slug=cd.cd.slug %}">Return it</a>
                         </td>
                     {% else %}
                         <td>Returned</td>
@@ -38,6 +83,21 @@
       {% endif %}
     </ul>
 
-
+    </div>
+    <div class="col-6 col-md-4 ">
+        <h2 class="pl-5">Menu:</h2>
+        <ul class="ml-0 bg-white">
+            <li><a href="{% url 'books:books' %}">Books</a></li>
+            <li><a href="{% url 'books:films' %}">Films</a></li>
+             <li><a href="{% url 'books:CDs' %}">CDs</a></li>
+            <li><a href="{% url 'books:ranking' %}">Ranking</a></li>
+          {% if not user.is_authenticated %}
+            <li><a href="{% url 'auth_login' %}">Login</a></li>
+            <li><a href="{% url 'registration_register' %}">Register</a></li>
+          {% else %}
+            <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </div>
 {% endblock %}

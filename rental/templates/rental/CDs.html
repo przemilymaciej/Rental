@@ -1,0 +1,42 @@
+{% extends "rental/base.html" %}
+{% block content %}
+<p>
+    <h1 class="text-center"> CDs </h1>
+    <h5 class="mt-3"><strong>Search most popular CDs by the genre: </strong></h5>
+
+    <form class="searchForm" action="{% url 'books:searchcd' %}" method="GET">
+        <div class="form-group row">
+            <input class="form-control col-md-7" required="required" name="q" type="text" placeholder="Write the genre">
+            <span class="col-md-1"></span>
+            <button type="submit" class="btn btn-primary form-control col-md-2">Search</button>
+        </div>
+    </form>
+</p>
+<hr class="my-4">
+<a href="{% url "books:cd_new" %}">+ New CD</a>
+<h3>Most popular CDs:</h3>
+<div class="row ">
+    {% for cd in top_3_CDs %}
+    <div class="col-md-4 ">
+        <div>
+            <h5>{{ cd.title }}</h5>
+            <h6>{{ cd.band }}</h6>
+            <a href="{% url 'books:cdDetail' slug=cd.slug %}"><button class="btn btn-primary btn-xs">CD details</button></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<h3>Recent added CDs:</h3>
+<div class="row">
+    {% for cd in cd_list %}
+    <div class="col-md-4 ">
+        <div >
+            <h5>{{ cd.title }}</h5>
+            <h6>{{ cd.band }}</h6>
+            <a href="{% url 'books:cdDetail' slug=cd.slug %}"><button class="btn btn-primary btn-xs">CD details</button></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

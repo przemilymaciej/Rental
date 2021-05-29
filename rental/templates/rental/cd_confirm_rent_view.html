@@ -1,0 +1,9 @@
+{% extends "rental/base.html" %}
+{% block content %}
+
+<h3>Are you sure tha you want to rent this CD? </h3>
+<h5><strong>Title:</strong> {{ cd.title }}</h5>
+<h5><strong>Author:</strong> {{ cd.band }}</h5>
+<a href="{% url 'books:rent_cd' slug=cd.slug %}"><button class="btn btn-success btn-xs">Rent CD</button></a>
+<a href="{% url 'books:cdDetail' slug=cd.slug %}"><button class="btn btn-info btn-xs">Return</button></a>
+{% endblock content %}

@@ -1,9 +1,23 @@
 h1 , h2  {
-    color: #C25100;
+    color: black;
     font-family: lobster;
 
 }
 
 body {
-    padding-left: 15px;
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #EBF5FB ;
+}
+.rental {
+    display: table-cell;
+    vertical-align: middle;
+}
+.table td {
+    background-color: white;
+}
+.table {
+	border: 2px solid rgba(0,0,0,0.49);
 }

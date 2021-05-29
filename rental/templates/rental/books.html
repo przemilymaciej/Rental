@@ -1,7 +1,18 @@
 {% extends "rental/base.html" %}
 {% block content %}
+<p>
+    <h1 class="text-center"> Books </h1>
+<h5 class="mt-3"><strong>Search most popular books by the genre:</strong> </h5>
+    <form class="searchForm" action="{% url 'books:searchb' %}" method="GET">
+        <div class="form-group row">
+            <input class="form-control col-md-7" required="required" name="q" type="text" placeholder="Write the genre">
+            <span class="col-md-1"></span>
+            <button type="submit" class="btn btn-primary form-control col-md-2">Search</button>
+        </div>
+    </form>
+</p>
 <hr class="my-4">
-<a href="{% url "books:book_new" %}">+ Nowa książka</a>
+<a href="{% url "books:book_new" %}">+ New book</a>
 <h3>Most popular books:</h3>
 <div class="row lastBooksContainer">
     {% for book in top_3_books %}
@@ -26,14 +37,5 @@
     </div>
     {% endfor %}
 </div>
-<p>
-    <h5 class="mt-3">Search most popular books by the genre: </h5>
-    <form class="searchForm" action="{% url 'books:search' %}" method="GET">
-        <div class="form-group row">
-            <input class="form-control col-md-7" required="required" name="q" type="text" placeholder="Write the genre">
-            <span class="col-md-1"></span>
-            <button type="submit" class="btn btn-primary form-control col-md-2">Search</button>
-        </div>
-    </form>
-</p>
+
 {% endblock content %}

@@ -1,0 +1,9 @@
+{% extends "rental/base.html" %}
+{% block content %}
+
+<h3>Are you sure tha you want to rent this book? </h3>
+<h5><strong>Title:</strong> {{ film.title }}</h5>
+<h5><strong>Author:</strong> {{ film.director }}</h5>
+<a href="{% url 'books:rent_film' slug=film.slug %}"><button class="btn btn-success btn-xs">Rent film</button></a>
+<a href="{% url 'books:filmDetail' slug=film.slug %}"><button class="btn btn-info btn-xs">Return</button></a>
+{% endblock content %}

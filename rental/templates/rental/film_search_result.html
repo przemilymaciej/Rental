@@ -1,0 +1,23 @@
+{% extends "rental/base.html" %}
+{% block content %}
+<h2>Search results for: "{{ request.GET.q }}":</h2>
+<div class="row lastBooksContainer">
+    {% if film_list %}
+    {% for film in film_list %}
+    <div class="col-md-4 bookCard">
+        <div class="cardBorder">
+            <h5>{{ film.title }}</h5>
+            <h6>{{ film.director }}</h6>
+            <h6>popularity : {{ film.popularity }}</h6>
+            <a href="{% url 'books:filmDetail' slug=film.slug %}"><button class="btn btn-primary btn-xs">Film details</button></a>
+        </div>
+
+    </div>
+    {% endfor %}
+    {% else %}
+    <h5 style="margin-left:30px;"> We don't have that film :/</h5>
+    {% endif %}
+
+
+</div>
+{% endblock content %}

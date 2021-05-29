@@ -6,11 +6,11 @@
         {% if book.book_amount > 0 %}
         <h5><strong>Available Book amount :</strong> {{ book.book_amount }}</h5>
             {% if user.is_authenticated %}
-            <a href="{% url 'books:confirm_rent_view' slug=book.slug %}"><button class="btn btn-primary btn-xs">Rent</button></a>
+            <a href="{% url 'books:confirm_rent_viewb' slug=book.slug %}"><button class="btn btn-primary btn-xs">Rent</button></a>
             <a href="{% url 'books:book_edit' book.id %}"><button type="button" >Zmień</button></a>
             <a href="{% url 'books:book_delete' book.id %}"><button type="button">Usuń</button></a>
             {% else %}
-            <a href="{% url 'books:confirm_rent_view' slug=book.slug %}"><button class="btn btn-primary btn-xs">Login to rent
+            <a href="{% url 'books:confirm_rent_viewb' slug=book.slug %}"><button class="btn btn-primary btn-xs">Login to rent
                     book</button></a>
             {% endif %}
         {% else %}
