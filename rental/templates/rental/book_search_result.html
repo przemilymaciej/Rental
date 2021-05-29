@@ -1,11 +1,11 @@
 {% extends "rental/base.html" %}
 {% block content %}
 <h2>Search results for: "{{ request.GET.q }}":</h2>
-<div class="row lastBooksContainer">
+<div class="row">
     {% if book_list %}
     {% for book in book_list %}
-    <div class="col-md-4 bookCard">
-        <div class="cardBorder">
+    <div class="col-md-4 ">
+        <div>
             <h5>{{ book.title }}</h5>
             <h6>{{ book.author }}</h6>
             <h6>popularity : {{ book.popularity }}</h6>

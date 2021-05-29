@@ -1,0 +1,12 @@
+{% extends 'rental/base.html' %}
+
+{% block content %}
+{% for book in books %}
+<div>
+    <h2>Tytuł: {{book.title}}</h2>
+    <p>Reżyser: {{book.author}}</p>
+    <p>Gatunek: {{book.ISBN}}</p>
+    <p>ID: {{book.pk}}</p>
+</div>
+{% endfor %}
+{% endblock %}

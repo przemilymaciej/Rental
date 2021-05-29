@@ -6,6 +6,7 @@ from .models import Film
 
 from .models import CD
 
+
 class BookForm(forms.ModelForm):
 
     class Meta:
@@ -23,3 +24,5 @@ class CDForm(forms.ModelForm):
     class Meta:
         model = CD
         fields = ('title', 'band', 'genre','length','CD_amount','tracks')
+
+

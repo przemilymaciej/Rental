@@ -161,23 +161,21 @@ class CD(models.Model):
     tracks = models.TextField(max_length=300)
     popularity = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.title
 
     def clean(self, *args, **kwargs):
         ct = CD.objects.filter(genre=self.genre).filter(tracks=self.tracks).count()
         if ct:
             if ct > 1:
-                raise ValidationError(
-                    'w ramach jednego gatunku nie możemy oferować dwóch płyt o tej samej liście utworów')
+                 raise ValidationError(
+                        'w ramach jednego gatunku nie możemy oferować dwóch płyt o tej samej liście utworów')
+
         mydiscog = CD.objects.filter(band=self.band).values('genre').distinct().count()
         if mydiscog:
             if mydiscog > 2:
-                raise ValidationError('płyty danego zespołu mogą być oferowane tylko w dwóch gatunkach!')
+                 raise ValidationError('płyty danego zespołu mogą być oferowane tylko w dwóch gatunkach!')
         super(CD, self).clean(*args, **kwargs)
-
-
-
-    def __str__(self):
-        return self.title
 
 
     def save(self, *args, **kwargs):

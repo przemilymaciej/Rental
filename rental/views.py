@@ -30,7 +30,7 @@ class RankingView(generic.TemplateView):
         context.update({
             'top_5_CD': User.objects.annotate(num_CDs=Count('CDs')).order_by('-num_CDs')[:5],
             'top_5_films': User.objects.annotate(num_films=Count('films')).order_by('-num_films')[:5],
-            'top_5_books': User.objects.annotate(num_books=Count('CDs')).order_by('-num_books')[:5],
+            'top_5_books': User.objects.annotate(num_books=Count('books')).order_by('-num_books')[:5],
         })
         return context
 
@@ -58,7 +58,7 @@ class BookDetailView(generic.DetailView):
 
 
 class SearchBookListView(generic.ListView):
-    template_name = "books/book_search_result.html"
+    template_name = "rental/book_search_result.html"
     model = Book
 
     def get_queryset(self):
@@ -79,7 +79,7 @@ def confirm_rent_viewb(request, slug):
             return redirect('books:bookDetail', slug=b.slug)
     except Book.DoesNotExist:
         raise Http404("We dont have this book")
-    return render(request, 'rental/confirm_rent_view.html', {'book': b})
+    return render(request, 'rental/confirm_rent_viewb.html', {'book': b})
 
 
 @login_required(login_url='users/login')

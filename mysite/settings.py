@@ -121,5 +121,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 REGISTRATION_AUTO_LOGIN = True  # automatyczne logowanie po rejestracji
-LOGIN_REDIRECT_URL = '/books'  # strona docelowa po zalogowaniu
+LOGIN_REDIRECT_URL = '/'  # strona docelowa po zalogowaniu
 LOGIN_URL = '/users/login/'  # strona logowania
